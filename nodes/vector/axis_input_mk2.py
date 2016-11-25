@@ -34,15 +34,17 @@ class SvAxisInputNodeMK2(bpy.types.Node, SverchCustomTreeNode):
     axis_y = bpy.props.BoolProperty(update=updateNode, name='Y')
     axis_z = bpy.props.BoolProperty(update=updateNode, name='Z')
 
-    def sv_init(self, context):
-        self.width = 100
-        self.outputs.new('VerticesSocket', "Vector")
-
-    def draw_buttons(self, context, layout):
+    def my_custom_draw(self, context, layout):
         row = layout.row(align=True)
         row.prop(self, 'axis_x', toggle=True)
         row.prop(self, 'axis_y', toggle=True)
         row.prop(self, 'axis_z', toggle=True)
+
+    def sv_init(self, context):
+        self.width = 100
+        a = self.outputs.new('VerticesSocket', "Vector")
+        a.custom_draw = 'my_custom_draw'
+
 
     def get_axis(self):
         return int(self.axis_x), int(self.axis_y), int(self.axis_z)

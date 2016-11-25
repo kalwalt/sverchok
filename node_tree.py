@@ -115,6 +115,8 @@ class VerticesSocket(NodeSocket, SvSocketCommon):
     prop_name = StringProperty(default='')
     use_prop = BoolProperty(default=False)
 
+    custom_draw = StringProperty()
+
     def get_prop_data(self):
         if self.prop_name:
             return {"prop_name": socket.prop_name}
@@ -137,9 +139,12 @@ class VerticesSocket(NodeSocket, SvSocketCommon):
         else:
             return default
 
-
-
     def draw(self, context, layout, node, text):
+        if hasattr(self, 'custom_draw'):
+            if self.custom_draw and hasattr(node, self.custom_draw):
+                getattr(node, self.custom_draw)(context, layout)
+                return
+
         if not self.is_output and not self.is_linked:
             if self.prop_name:
                 layout.template_component_menu(node, self.prop_name, name=self.name)
