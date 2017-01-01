@@ -16,7 +16,6 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
-import colorsys
 import bpy
 from bpy.props import FloatProperty, BoolProperty
 
@@ -88,14 +87,6 @@ class SvColorsInNode(bpy.types.Node, SverchCustomTreeNode):
         
     
     def process(self):
-        """
-        colorsys.rgb_to_yiq(r, g, b)
-        colorsys.yiq_to_rgb(y, i, q)
-        colorsys.rgb_to_hls(r, g, b)
-        colorsys.hls_to_rgb(h, l, s)
-        colorsys.rgb_to_hsv(r, g, b)
-        colorsys.hsv_to_rgb(h, s, v)
-        """        
         if not self.outputs['Colors'].is_linked:
             return
         inputs = self.inputs
