@@ -75,6 +75,7 @@ class SvSocketCommon:
     def sv_set(self, data):
         SvSetSocket(self, data)
 
+
 class MatrixSocket(NodeSocket, SvSocketCommon):
     '''4x4 matrix Socket type'''
     # ref: http://urchn.org/post/nodal-transform-experiment
@@ -187,6 +188,7 @@ class StringsSocket(NodeSocket, SvSocketCommon):
     bl_idname = "StringsSocket"
     bl_label = "Strings Socket"
 
+    nodule_color = (0.6, 1.0, 0.6, 1.0)
     prop_name = StringProperty(default='')
 
     prop_type = StringProperty(default='')
@@ -238,7 +240,7 @@ class StringsSocket(NodeSocket, SvSocketCommon):
             layout.label(t)
 
     def draw_color(self, context, node):
-        return (0.6, 1.0, 0.6, 1.0)
+        return self.nodule_color
 
 
 class SvNodeTreeCommon(object):
