@@ -188,7 +188,7 @@ class StringsSocket(NodeSocket, SvSocketCommon):
     bl_idname = "StringsSocket"
     bl_label = "Strings Socket"
 
-    nodule_color = (0.6, 1.0, 0.6, 1.0)
+    nodule_color = FloatVectorProperty(default=(0.6, 1.0, 0.6, 1.0), size=4)
     prop_name = StringProperty(default='')
 
     prop_type = StringProperty(default='')

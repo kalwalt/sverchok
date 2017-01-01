@@ -218,6 +218,7 @@
     SvObjInLite
     SvScriptNodeLite
     SvRndNumGen
+    SvColorsInNode
 
 ## Alpha Nodes
     SvCurveViewerNode
