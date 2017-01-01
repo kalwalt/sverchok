@@ -34,31 +34,31 @@ def fprop_generator(**altprops):
     return FloatProperty(**default_dict_vals)
 
 
-class SvColorsInNode(bpy.types.Node, SverchCustomTreeNode):
-    ''' Generator for Color data , color combine'''
-    bl_idname = 'SvColorsInNode'
-    bl_label = 'Color in'
+class SvColorsOutNode(bpy.types.Node, SverchCustomTreeNode):
+    ''' Generator for Color data , color separate'''
+    bl_idname = 'SvColorsOutNode'
+    bl_label = 'Color Out'
     bl_icon = 'OUTLINER_OB_EMPTY'
 
     def psuedo_update(self, context):
         for idx, socket in enumerate(self.selected_mode):
-            self.inputs[idx].name = socket
-            self.inputs[idx].prop_name = socket.lower() + '_'
+            self.outputs[idx].name = socket
+            # self.outputs[idx].prop_name = socket.lower() + '_'
         updateNode(self, context)
 
-    r_ = fprop_generator(name='R', description='Red (0..1)')
-    g_ = fprop_generator(name='G', description='Green (0..1)')
-    b_ = fprop_generator(name='B', description='Blue (0..1)')
-    a_ = fprop_generator(name='A', description='Alpha (0..1) - opacity')
+    # r_ = fprop_generator(name='R', description='Red (0..1)')
+    # g_ = fprop_generator(name='G', description='Green (0..1)')
+    # b_ = fprop_generator(name='B', description='Blue (0..1)')
+    # a_ = fprop_generator(name='A', description='Alpha (0..1) - opacity')
 
-    y_ = fprop_generator(name='Y', description='Luma (0..1)')
-    i_ = fprop_generator(name='I', min=-1.0, description='orange-blue range (-1..1) - chrominance')
-    q_ = fprop_generator(name='Q', min=-1.0, description='purple-green (-1..1) - chrominance')
+    # y_ = fprop_generator(name='Y', description='Luma (0..1)')
+    # i_ = fprop_generator(name='I', min=-1.0, description='orange-blue range (-1..1) - chrominance')
+    # q_ = fprop_generator(name='Q', min=-1.0, description='purple-green (-1..1) - chrominance')
 
-    h_ = fprop_generator(name='H', description='Hue (0..1)')
-    s_ = fprop_generator(name='S', description='Saturation (0..1) - different for hsv and hsl')
-    l_ = fprop_generator(name='L', description='Lightness / Brightness (0..1)')
-    v_ = fprop_generator(name='V', description='Value / Brightness (0..1)')
+    # h_ = fprop_generator(name='H', description='Hue (0..1)')
+    # s_ = fprop_generator(name='S', description='Saturation (0..1) - different for hsv and hsl')
+    # l_ = fprop_generator(name='L', description='Lightness / Brightness (0..1)')
+    # v_ = fprop_generator(name='V', description='Value / Brightness (0..1)')
 
     mode_options = [
         # having element 0 and 1 helps reduce code.
@@ -79,12 +79,12 @@ class SvColorsInNode(bpy.types.Node, SverchCustomTreeNode):
     def sv_init(self, context):
         self.width = 100
         inew = self.inputs.new
-        inew('StringsSocket', "R").prop_name = 'r_'
-        inew('StringsSocket', "G").prop_name = 'g_'
-        inew('StringsSocket', "B").prop_name = 'b_'
-        inew('StringsSocket', "A").prop_name = 'a_'
+        inew('StringsSocket', "Colors").nodule_color = nodule_color
         onew = self.outputs.new
-        onew('StringsSocket', "Colors").nodule_color = nodule_color
+        onew('StringsSocket', "R")
+        onew('StringsSocket', "G")
+        onew('StringsSocket', "B")
+        onew('StringsSocket', "A")
         
     
     def process(self):
@@ -96,36 +96,37 @@ class SvColorsInNode(bpy.types.Node, SverchCustomTreeNode):
         colorsys.rgb_to_hsv(r, g, b)
         colorsys.hsv_to_rgb(h, s, v)
         """        
-        if not self.outputs['Colors'].is_linked:
-            return
-        inputs = self.inputs
+        # if not self.outputs['Colors'].is_linked:
+        #     return
+        # inputs = self.inputs
         
-        i0 = inputs[0].sv_get()
-        i1 = inputs[1].sv_get()
-        i2 = inputs[2].sv_get()
-        i3 = inputs[3].sv_get()
+        # i0 = inputs[0].sv_get()
+        # i1 = inputs[1].sv_get()
+        # i2 = inputs[2].sv_get()
+        # i3 = inputs[3].sv_get()
 
-        series_vec = []
-        max_obj = max(map(len, (i0, i1, i2, i3)))
-        fullList(i0, max_obj)
-        fullList(i1, max_obj)
-        fullList(i2, max_obj)
-        fullList(i3, max_obj)
-        for i in range(max_obj):
+        # series_vec = []
+        # max_obj = max(map(len, (i0, i1, i2, i3)))
+        # fullList(i0, max_obj)
+        # fullList(i1, max_obj)
+        # fullList(i2, max_obj)
+        # fullList(i3, max_obj)
+        # for i in range(max_obj):
                 
-            max_v = max(map(len, (i0[i], i1[i], i2[i], i3[i])))
-            fullList(i0[i], max_v)
-            fullList(i1[i], max_v)
-            fullList(i2[i], max_v)
-            fullList(i3[i], max_v)
-            series_vec.append(list(zip(i0[i], i1[i], i2[i], i3[i])))
+        #     max_v = max(map(len, (i0[i], i1[i], i2[i], i3[i])))
+        #     fullList(i0[i], max_v)
+        #     fullList(i1[i], max_v)
+        #     fullList(i2[i], max_v)
+        #     fullList(i3[i], max_v)
+        #     series_vec.append(list(zip(i0[i], i1[i], i2[i], i3[i])))
         
-        self.outputs['Colors'].sv_set(series_vec)
+        # self.outputs['Colors'].sv_set(series_vec)
+        pass
     
     
 def register():
-    bpy.utils.register_class(SvColorsInNode)
+    bpy.utils.register_class(SvColorsOutNode)
 
 
 def unregister():
-    bpy.utils.unregister_class(SvColorsInNode)
+    bpy.utils.unregister_class(SvColorsOutNode)
