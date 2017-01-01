@@ -43,22 +43,7 @@ class SvColorsOutNode(bpy.types.Node, SverchCustomTreeNode):
     def psuedo_update(self, context):
         for idx, socket in enumerate(self.selected_mode):
             self.outputs[idx].name = socket
-            # self.outputs[idx].prop_name = socket.lower() + '_'
         updateNode(self, context)
-
-    # r_ = fprop_generator(name='R', description='Red (0..1)')
-    # g_ = fprop_generator(name='G', description='Green (0..1)')
-    # b_ = fprop_generator(name='B', description='Blue (0..1)')
-    # a_ = fprop_generator(name='A', description='Alpha (0..1) - opacity')
-
-    # y_ = fprop_generator(name='Y', description='Luma (0..1)')
-    # i_ = fprop_generator(name='I', min=-1.0, description='orange-blue range (-1..1) - chrominance')
-    # q_ = fprop_generator(name='Q', min=-1.0, description='purple-green (-1..1) - chrominance')
-
-    # h_ = fprop_generator(name='H', description='Hue (0..1)')
-    # s_ = fprop_generator(name='S', description='Saturation (0..1) - different for hsv and hsl')
-    # l_ = fprop_generator(name='L', description='Lightness / Brightness (0..1)')
-    # v_ = fprop_generator(name='V', description='Value / Brightness (0..1)')
 
     mode_options = [
         # having element 0 and 1 helps reduce code.
