@@ -46,7 +46,6 @@ class SvColorsOutNode(bpy.types.Node, SverchCustomTreeNode):
         updateNode(self, context)
 
     mode_options = [
-        # having element 0 and 1 helps reduce code.
         ("RGB", "RGB", "", 0),
         ("HSV", "HSV", "", 1),
         ("HSL", "HSL", "", 2),

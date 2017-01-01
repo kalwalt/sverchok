@@ -60,7 +60,6 @@ class SvColorsInNode(bpy.types.Node, SverchCustomTreeNode):
     v_ = fprop_generator(name='V', description='Value / Brightness (0..1)')
 
     mode_options = [
-        # having element 0 and 1 helps reduce code.
         ("RGB", "RGB", "", 0),
         ("HSV", "HSV", "", 1),
         ("HSL", "HSL", "", 2),
