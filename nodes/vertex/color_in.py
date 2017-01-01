@@ -52,6 +52,21 @@ class SvColorsInNode(bpy.types.Node, SverchCustomTreeNode):
     l_ = fprop_generator(name='L', description='Lightness / Brightness')
     v_ = fprop_generator(name='V', description='Value / Brightness')
 
+    mode_options = [
+        # having element 0 and 1 helps reduce code.
+        ("RGB", "RGB", "", 0),
+        ("HSV", "HSV", "", 1),
+        ("HSL", "HSL", "", 2),
+        ("YIQ", "YIQ", "", 3)
+    ]
+    
+    selected_mode = bpy.props.EnumProperty(
+        default="RGB", description="offers color spaces",
+        items=mode_options, update=updateNode
+    )
+
+    def draw_buttons(self, context, layout):
+        layout.prop(self, 'selected_mode', expand=True)
 
     def sv_init(self, context):
         self.width = 100
@@ -75,19 +90,19 @@ class SvColorsInNode(bpy.types.Node, SverchCustomTreeNode):
         i3 = inputs[3].sv_get()
 
         series_vec = []
-        max_obj = max(map(len, (i0_, i1_, i2_, i3)))
-        fullList(i0_, max_obj)
-        fullList(i1_, max_obj)
-        fullList(i2_, max_obj)
-        fullList(i3_, max_obj)
+        max_obj = max(map(len, (i0, i1, i2, i3)))
+        fullList(i0, max_obj)
+        fullList(i1, max_obj)
+        fullList(i2, max_obj)
+        fullList(i3, max_obj)
         for i in range(max_obj):
                 
-            max_v = max(map(len, (i0_[i], i1_[i], i2_[i], i3_[i])))
-            fullList(i0_[i], max_v)
-            fullList(i1_[i], max_v)
-            fullList(i2_[i], max_v)
-            fullList(i3_[i], max_v)
-            series_vec.append(list(zip(i0_[i], i1_[i], i2_[i], i3_[i])))
+            max_v = max(map(len, (i0[i], i1[i], i2[i], i3[i])))
+            fullList(i0[i], max_v)
+            fullList(i1[i], max_v)
+            fullList(i2[i], max_v)
+            fullList(i3[i], max_v)
+            series_vec.append(list(zip(i0[i], i1[i], i2[i], i3[i])))
         
         self.outputs['Colors'].sv_set(series_vec)
     
