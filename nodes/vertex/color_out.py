@@ -18,7 +18,8 @@
 
 import colorsys
 import bpy
-from bpy.props import FloatProperty, BoolProperty
+from bpy.props import FloatProperty, BoolProperty, FloatVectorProperty
+from mathutils import Color
 
 from sverchok.node_tree import SverchCustomTreeNode, StringsSocket
 from sverchok.data_structure import updateNode, fullList, SvGetSocketAnyType, SvSetSocketAnyType
@@ -57,13 +58,17 @@ class SvColorsOutNode(bpy.types.Node, SverchCustomTreeNode):
         items=mode_options, update=psuedo_update
     )
 
+    unit_color = FloatVectorProperty(default=(.3, .3, .2, 1.0), size=4, subtype='COLOR')
+
     def draw_buttons(self, context, layout):
         layout.prop(self, 'selected_mode', expand=True)
 
     def sv_init(self, context):
         self.width = 100
         inew = self.inputs.new
-        inew('StringsSocket', "Colors").nodule_color = nodule_color
+        color_socket = inew('StringsSocket', "Colors")
+        color_socket.nodule_color = nodule_color
+        color_socket.col_prop = 'unit_color'
         onew = self.outputs.new
         onew('StringsSocket', "R")
         onew('StringsSocket', "G")

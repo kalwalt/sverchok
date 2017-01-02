@@ -190,6 +190,7 @@ class StringsSocket(NodeSocket, SvSocketCommon):
 
     # color hi-jack
     nodule_color = FloatVectorProperty(default=(0.6, 1.0, 0.6, 1.0), size=4)
+    col_prop = StringProperty()
 
     prop_name = StringProperty(default='')
 
@@ -234,6 +235,8 @@ class StringsSocket(NodeSocket, SvSocketCommon):
                 layout.prop(node, self.prop_name)
             elif self.prop_type:
                 layout.prop(node, self.prop_type, index=self.prop_index, text=self.name)
+            elif self.col_prop:
+                layout.prop(node, self.col_prop, text='')
             else:
                 layout.label(t)
         elif self.is_linked:

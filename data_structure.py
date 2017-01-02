@@ -1149,8 +1149,10 @@ def SvGetSocketInfo(socket):
     if ng in socket_data_cache:
         if s_id in socket_data_cache[ng]:
             data = socket_data_cache[ng][s_id]
-            if data:
+            if data and isinstance(data, list):
                 return str(len(data))
+            elif data and isinstance(data, dict):
+                return str(len(data['data'])) + ' ' + data['kind']
     return ''
 
 
