@@ -184,6 +184,7 @@
     IndexViewerNode
     Sv3DviewPropsNode
     SvTextureViewerNode
+    SvPixelViewerNode
 
 ## Text
     ViewerNodeTextMK2
