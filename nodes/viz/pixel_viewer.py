@@ -276,9 +276,6 @@ class SvPixelViewerNode(bpy.types.Node, SverchCustomTreeNode):
         layout.separator()
         layout.prop(self, "bitmap_format", text='format')
         layout.separator()
-        row = layout.row()
-        row.prop(self, 'color_mode_save', expand=True)
-        layout.separator()
         if img_format == 'PNG':
             row = layout.row()
             row.prop(self, 'compression_level', text='set compression')
