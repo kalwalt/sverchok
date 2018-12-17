@@ -1,24 +1,17 @@
-# ##### BEGIN GPL LICENSE BLOCK #####
-#
-#  This program is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU General Public License
-#  as published by the Free Software Foundation; either version 2
-#  of the License, or (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program; if not, write to the Free Software Foundation,
-#  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
-# ##### END GPL LICENSE BLOCK #####
+# This file is part of project Sverchok. It's copyrighted by the contributors
+# recorded in the version control history of the file, available from
+# its original location https://github.com/nortikin/sverchok/commit/master
+#  
+# SPDX-License-Identifier: GPL3
+# License-Filename: LICENSE
+
+# contributors:
+#   kalwalt
+#   zeffii
 
 import os
 import numpy as np
-# import math as m
+
 
 import bpy
 import gpu
@@ -103,7 +96,9 @@ factor_buffer_dict = {
 
 vertex_shader = '''
     uniform mat4 ModelViewProjectionMatrix;
-/* Keep in sync with intern/opencolorio/gpu_shader_display_transform_vertex.glsl */
+    
+    /* Keep in sync with intern/opencolorio/gpu_shader_display_transform_vertex.glsl */
+    
     in vec2 texCoord;
     in vec2 pos;
 
@@ -118,7 +113,6 @@ vertex_shader = '''
 '''
 
 fragment_shader = '''
-
     in vec2 texCoord_interp;
     out vec4 fragColor;
 
@@ -127,17 +121,16 @@ fragment_shader = '''
 
     void main()
     {
-        if (ColorMode)
-        {
-
+        if (ColorMode) {
            fragColor = texture(image, texCoord_interp);
-
-        }else{
-
+        } else {
            fragColor = texture(image, texCoord_interp).rrrr;
         }
     }
 '''
+
+# why (( )) ? see uniform_bool(name, seq) in
+# https://docs.blender.org/api/blender2.8/gpu.types.html
 cMode = ((False,))
 
 def transfer_to_image(pixels, name, width, height, mode):
@@ -182,10 +175,6 @@ def simple_screen(x, y, args):
         bgl.glDisable(bgl.GL_DEPTH_TEST)
 
         act_tex = bgl.Buffer(bgl.GL_INT, 1)
-        #bgl.glGetIntegerv(bgl.GL_TEXTURE_2D, act_tex)
-        #bgl.glEnable(bgl.GL_TEXTURE_2D)
-        #bgl.glActiveTexture(bgl.GL_TEXTURE0)
-        #bgl.glTexParameterf(bgl.GL_TEXTURE_ENV, bgl.GL_TEXTURE_ENV_MODE, bgl.GL_REPLACE)
         bgl.glBindTexture(bgl.GL_TEXTURE_2D, texname)
 
         shader.bind()
@@ -193,16 +182,19 @@ def simple_screen(x, y, args):
         shader.uniform_bool("ColorMode", c)
         batch.draw(shader)
 
-        # # restoring settings
+        # restoring settings
         bgl.glBindTexture(bgl.GL_TEXTURE_2D, act_tex[0])
         bgl.glDisable(bgl.GL_TEXTURE_2D)
-        pass
 
     draw_texture(x=x, y=y, w=width, h=height, texname=texname, c=cMod)
 
 
 class SvTextureViewerNode(bpy.types.Node, SverchCustomTreeNode):
-    '''Texture Viewer node'''
+    """
+    Triggers: Texture Viewer node 
+    Tooltip: Generate textures and images from inside Sverchok
+    """
+
     bl_idname = 'SvTextureViewerNode'
     bl_label = 'Texture viewer'
     texture = {}
@@ -213,7 +205,6 @@ class SvTextureViewerNode(bpy.types.Node, SverchCustomTreeNode):
                 self.inputs.new('StringsSocket', "Width").prop_name = 'width_custom_tex'
                 self.inputs.new('StringsSocket', "Height").prop_name = 'height_custom_tex'
         else:
-
             if len(self.inputs) == 3:
                 self.inputs.remove(self.inputs[-1])
                 self.inputs.remove(self.inputs[-1])
@@ -305,7 +296,6 @@ class SvTextureViewerNode(bpy.types.Node, SverchCustomTreeNode):
         data = self.inputs['Float'].sv_get(deepcopy=False)
         self.total_size = self.calculate_total_size()
 
-        #  self.make_data_correct_length(data)
         texture = bgl.Buffer(bgl.GL_FLOAT, self.total_size, np.resize(data, self.total_size).tolist())
         return texture
 
@@ -320,7 +310,6 @@ class SvTextureViewerNode(bpy.types.Node, SverchCustomTreeNode):
         nrow.prop(self, 'to_image_viewer')
         row = layout.row(align=True)
         row.prop(self, 'color_mode', expand=True)
-
 
     def draw_buttons_ext(self, context, layout):
         img_format = self.bitmap_format
@@ -389,6 +378,8 @@ class SvTextureViewerNode(bpy.types.Node, SverchCustomTreeNode):
 
         print(cMode)
 
+        cMode = ((True,)) if self.color_mode in ('RGB', 'RGBA') else ((False,))
+
         if self.to_image_viewer:
 
             mode = self.color_mode
@@ -403,6 +394,7 @@ class SvTextureViewerNode(bpy.types.Node, SverchCustomTreeNode):
             width, height = self.texture_width_height
             x, y = self.xy_offset
             gl_color_constant = gl_color_dict.get(self.color_mode)
+    
             name = bgl.Buffer(bgl.GL_INT, 1)
             bgl.glGenTextures(1, name)
             self.texture[n_id] = name[0]
@@ -451,8 +443,8 @@ class SvTextureViewerNode(bpy.types.Node, SverchCustomTreeNode):
         nvBGL2.callback_disable(node_id(self))
         self.delete_texture()
 
-    # reset n_id on copy
     def copy(self, node):
+        # reset n_id on copy
         self.n_id = ''
 
     def set_dir(self, operator):
@@ -487,7 +479,6 @@ class SvTextureViewerNode(bpy.types.Node, SverchCustomTreeNode):
         desired_path = os.path.join(self.base_dir, self.image_name + extension)
         img.save_render(desired_path, scene)
         print('Bitmap saved!  path is:', desired_path)
-
 
 
 classes = [SvTextureViewerOperator, SvTextureViewerDirSelect, SvTextureViewerNode]
