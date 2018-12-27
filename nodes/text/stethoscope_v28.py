@@ -24,7 +24,7 @@ import blf
 from bpy.props import BoolProperty, FloatVectorProperty, StringProperty, IntProperty
 from mathutils import Vector
 
-from sverchok.utils.context_managers import sv_preferences
+from sverchok.settings import get_params
 from sverchok.utils.sv_node_utils import recursive_framed_location_finder
 from sverchok.node_tree import SverchCustomTreeNode
 from sverchok.data_structure import node_id, updateNode
@@ -82,8 +82,8 @@ class SvStethoscopeNodeMK2(bpy.types.Node, SverchCustomTreeNode):
     def sv_init(self, context):
         self.inputs.new('StringsSocket', 'Data')
         try:
-            current_theme = bpy.context.user_preferences.themes.items()[0][0]
-            editor = bpy.context.user_preferences.themes[current_theme].node_editor
+            current_theme = bpy.context.preferences.themes.items()[0][0]
+            editor = bpy.context.preferences.themes[current_theme].node_editor
             self.text_color = high_contrast_color(editor.space.back)
         except:
             print('-', end='')
@@ -120,6 +120,13 @@ class SvStethoscopeNodeMK2(bpy.types.Node, SverchCustomTreeNode):
     def draw_buttons_ext(self, context, layout):
         layout.prop(self, 'font_id')
 
+    def get_preferences(self):
+        # supplied with default, forces at least one value :)
+        props = get_params({
+            'stethoscope_view_scale': 1.0, 
+            'render_location_xy_multiplier': 1.0})
+        return props.stethoscope_view_scale, props.render_location_xy_multiplier
+
     def process(self):
         inputs = self.inputs
         n_id = node_id(self)
@@ -128,15 +135,7 @@ class SvStethoscopeNodeMK2(bpy.types.Node, SverchCustomTreeNode):
         nvBGL.callback_disable(n_id)
 
         if self.activate and inputs[0].is_linked:
-
-            try:
-                with sv_preferences() as prefs:
-                    scale = prefs.stethoscope_view_scale
-                    location_theta = prefs.render_location_xy_multiplier
-            except:
-                # print('did not find preferences - you need to save user preferences')
-                scale = 1.0
-                location_theta = 1.0
+            scale, location_theta = self.get_preferences()
 
             # gather vertices from input
             data = inputs[0].sv_get(deepcopy=False)
@@ -159,10 +158,9 @@ class SvStethoscopeNodeMK2(bpy.types.Node, SverchCustomTreeNode):
                 #                # implement another nvBGL parses for gfx
                 processed_data = data
 
-            node_width = (self.width_hidden + 30.0) if self.hide else self.width
-
             # adjust proposed text location in case node is framed.
             # take into consideration the hidden state
+            node_width = (self.width_hidden + 30.0) if self.hide else self.width
             _x, _y = recursive_framed_location_finder(self, self.location[:])
             _x, _y = Vector((_x, _y)) + Vector((node_width + 20, 0))
 
@@ -196,7 +194,6 @@ class SvStethoscopeNodeMK2(bpy.types.Node, SverchCustomTreeNode):
 
 def register():
     bpy.utils.register_class(SvStethoscopeNodeMK2)
-
 
 def unregister():
     bpy.utils.unregister_class(SvStethoscopeNodeMK2)

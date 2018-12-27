@@ -140,6 +140,13 @@ class SvSocketCommon:
         # print("getting base extra info")
         return ""
 
+    def get_socket_info(self):
+        """ Return Number of encapsulated data lists, or empty str  """
+        try:
+            return SvGetSocketInfo(self)
+        except:
+            return ''
+
     def draw_expander_template(self, context, layout, prop_origin, prop_name="prop"):
 
         if self.bl_idname == "StringsSocket":
@@ -567,7 +574,7 @@ class SverchCustomTree(NodeTree, SvNodeTreeCommon):
     def has_link_count_changed(self):
         link_count = len(self.links)
         if not link_count == self.tree_link_count: 
-            print('update event: link count changed')
+            print('update event: link count changed', self.timestamp)
             self.tree_link_count = link_count
             return True
 

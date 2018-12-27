@@ -11,6 +11,32 @@ from sverchok.utils import sv_panels_tools, logging
 from sverchok.ui import color_def
 
 
+def get_params(settings_and_fallbacks):
+    """
+    This function returns an object which you can use the . op on.
+    example usage:
+
+        from sverchok.settings import get_params
+
+        props = get_params({'prop_name_1': 20, 'prop_name_2': 30})
+        # 20 = props.prop_name_1
+        # 30 = props.prop_name_2
+    """
+    from sverchok.utils.context_managers import sv_preferences
+
+    props = lambda: None
+
+    with sv_preferences() as prefs:
+        for k, v in settings_and_fallbacks.items():
+            try:
+                value = getattr(prefs, k)
+            except:
+                print(f'returning a default for {k}')
+                value = v
+            setattr(props, k, value)
+    return props
+
+
 class SverchokPreferences(AddonPreferences):
 
     bl_idname = __package__
@@ -279,17 +305,16 @@ class SverchokPreferences(AddonPreferences):
             row_sub1 = col.row().split(factor=0.5)
             box_sub1 = row_sub1.box()
             box_sub1_col = box_sub1.column(align=True)
-
-            box_sub1_col.label('Render Scale & Location')
+            
+            box_sub1_col.label(text='Render Scale & Location')
             box_sub1_col.prop(self, 'render_location_xy_multiplier', text='xy multiplier')
             box_sub1_col.prop(self, 'render_scale', text='scale')
-
-            box_sub1_col.label('Stethoscope')
+            
+            box_sub1_col.label(text='Stethoscope')
             box_sub1_col.prop(self, 'stethoscope_view_scale', text='scale')
 
-            box_sub1_col.label('Index Viewer')
-            box_sub1_col.prop(self, 'stethoscope_view_xy_multiplier', text='xy multiplier')
-            box_sub1_col.prop(self, 'index_viewer_scale', text='scale')
+            box_sub1_col.label(text='Index Viewer')
+            box_sub1_col.prop(self, 'index_viewer_scale', text='scale')           
 
             col3 = row_sub1.split().column()
             col3.label(text='Location of custom defaults')

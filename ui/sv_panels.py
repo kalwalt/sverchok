@@ -21,12 +21,26 @@ from bpy.props import StringProperty, BoolProperty, FloatProperty
 
 
 import sverchok
-from sverchok.utils.sv_update_utils import version_and_sha
 from sverchok.core.update_system import process_from_nodes
 from sverchok.utils import profile
+from sverchok.utils.sv_update_utils import version_and_sha
 
 objects_nodes_set = {'ObjectsNode', 'ObjectsNodeMK2', 'SvObjectsNodeMK3'}
 
+
+class SvRemoveStaleDrawCallbacks(bpy.types.Operator):
+
+    bl_idname = "node.remove_stale_draw_callbacks"
+    bl_label = "Remove Stale drawing"
+
+    def execute(self, context):
+        
+        from sverchok.core.handlers import sv_clean, sv_scene_handler
+        scene = context.scene
+        sv_clean(scene)
+        sv_scene_handler(scene)
+
+        return {'FINISHED'}
 
 
 class SverchokUpdateObjectIn(bpy.types.Operator):
@@ -132,7 +146,7 @@ class Sv3DPanel(bpy.types.Panel):
         layout = self.layout
         little_width = 0.32
 
-        addon = context.user_preferences.addons.get(sverchok.__name__)
+        addon = context.preferences.addons.get(sverchok.__name__)
         if addon.preferences.enable_live_objin:
 
             # Live Update Modal trigger.
@@ -333,7 +347,7 @@ class SverchokToolsMenu(bpy.types.Panel):
 
         little_width = 0.32
 
-        addon = context.user_preferences.addons.get(sverchok.__name__)
+        addon = context.preferences.addons.get(sverchok.__name__)
 
         self.draw_profiling_info_if_needed(layout, addon)
 
@@ -424,13 +438,16 @@ class SverchokToolsMenu(bpy.types.Panel):
             layout.row().operator(sha_update, text='Check for updates')
 
         layout.row().operator('node.sv_show_latest_commits')
+        layout.separator()
+        layout.row().operator('node.remove_stale_draw_callbacks')
 
 
 sv_tools_classes = [
     Sv3DViewObjInUpdater,
     SverchokToolsMenu,
     Sv3DPanel,
-    SverchokUpdateObjectIn
+    SverchokUpdateObjectIn,
+    SvRemoveStaleDrawCallbacks
 ]
 
 

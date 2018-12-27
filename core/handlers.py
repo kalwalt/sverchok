@@ -82,7 +82,6 @@ def sv_clean(scene):
     data_structure.sv_Vars = {}
     data_structure.temp_handle = {}
 
-
 @persistent
 def sv_post_load(scene):
     """
@@ -111,7 +110,7 @@ def sv_post_load(scene):
         ng.unfreeze(True)
 
     addon_name = data_structure.SVERCHOK_NAME
-    addon = bpy.context.user_preferences.addons.get(addon_name)
+    addon = bpy.context.preferences.addons.get(addon_name)
     if addon and hasattr(addon, "preferences"):
         pref = addon.preferences
         if pref.apply_theme_on_open:
@@ -149,7 +148,7 @@ def register():
 
     data_structure.setup_init()
     addon_name = data_structure.SVERCHOK_NAME
-    addon = bpy.context.user_preferences.addons.get(addon_name)
+    addon = bpy.context.preferences.addons.get(addon_name)
     if addon and hasattr(addon, "preferences"):
         set_frame_change(addon.preferences.frame_change_mode)
     else:

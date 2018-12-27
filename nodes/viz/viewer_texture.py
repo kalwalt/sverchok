@@ -21,7 +21,7 @@ from bpy.props import (
     FloatProperty, EnumProperty, StringProperty, BoolProperty, IntProperty
 )
 
-from sverchok.utils.context_managers import sv_preferences
+from sverchok.settings import get_params
 from sverchok.data_structure import updateNode, node_id
 from sverchok.node_tree import SverchCustomTreeNode
 from sverchok.ui import bgl_callback_nodeview as nvBGL2
@@ -129,10 +129,6 @@ fragment_shader = '''
     }
 '''
 
-# why (( )) ? see uniform_bool(name, seq) in
-# https://docs.blender.org/api/blender2.8/gpu.types.html
-cMode = ((False,))
-
 def transfer_to_image(pixels, name, width, height, mode):
     # transfer pixels(data) from Node tree to image viewer
     image = bpy.data.images.get(name)
@@ -166,7 +162,8 @@ def init_texture(width, height, texname, texture, clr):
 
 
 def simple_screen(x, y, args):
-    # draw a simple scren display for the texture
+    """ shader draw function for the texture """
+
     # border_color = (0.390805, 0.754022, 1.000000, 1.00)
     texture, texname, width, height, batch, shader, cMod = args
 
@@ -200,19 +197,14 @@ class SvTextureViewerNode(bpy.types.Node, SverchCustomTreeNode):
     texture = {}
 
     def wrapped_update(self, context):
-        if self.selected_mode == 'USER':
-            if len(self.inputs) == 1:
-                self.inputs.new('StringsSocket', "Width").prop_name = 'width_custom_tex'
-                self.inputs.new('StringsSocket', "Height").prop_name = 'height_custom_tex'
-        else:
-            if len(self.inputs) == 3:
-                self.inputs.remove(self.inputs[-1])
-                self.inputs.remove(self.inputs[-1])
-
+        hide_inputs = not (self.selected_mode == 'USER')
+        self.inputs["Width"].hide_safe = hide_inputs
+        self.inputs["Height"].hide_safe = hide_inputs
         updateNode(self, context)
 
     def wrapped_updateNode_(self, context):
         self.activate = False
+        updateNode(self, context)
 
     n_id: StringProperty(default='')
     to_image_viewer: BoolProperty(
@@ -342,17 +334,19 @@ class SvTextureViewerNode(bpy.types.Node, SverchCustomTreeNode):
         transfer.label(text="Transfer to image viewer")
         transfer.prop(self, 'texture_name', text='', icon='EXPORT')
 
-    def draw_label(self):
-        if self.selected_mode == 'USER':
-            width, height = self.texture_width_height
-            label = (self.label or self.name) + ' {0} x {1}'.format(width, height)
-        else:
-            label = (self.label or self.name) + ' ' + str(size_tex_dict.get(self.selected_mode)) + "^2"
-        return label
-
     def sv_init(self, context):
         self.width = 180
-        self.inputs.new('StringsSocket', "Float").prop_name = 'in_float'
+        inew = self.inputs.new
+        inew('StringsSocket', "Float").prop_name = 'in_float'
+
+        width_socket = inew('StringsSocket', "Width")
+        width_socket.prop_name = 'width_custom_tex'
+        width_socket.hide_safe = True
+        
+        height_socket = inew('StringsSocket', "Height")
+        height_socket.prop_name = 'height_custom_tex'
+        height_socket.hide_safe = True
+        pass
 
     def delete_texture(self):
         n_id = node_id(self)
@@ -378,7 +372,10 @@ class SvTextureViewerNode(bpy.types.Node, SverchCustomTreeNode):
 
         print(cMode)
 
-        cMode = ((True,)) if self.color_mode in ('RGB', 'RGBA') else ((False,))
+        # why is cMode a sequence like (bool,) ? see uniform_bool(name, seq) in
+        # https://docs.blender.org/api/blender2.8/gpu.types.html
+        is_multi_channel = self.color_mode in ('RGB', 'RGBA')
+        cMode = (is_multi_channel,)
 
         if self.to_image_viewer:
 
@@ -388,23 +385,21 @@ class SvTextureViewerNode(bpy.types.Node, SverchCustomTreeNode):
             resized_np_array = np.resize(pixels, self.calculate_total_size())
             transfer_to_image(resized_np_array, self.texture_name, width, height, mode)
 
-
         if self.activate:
             texture = self.get_buffer()
             width, height = self.texture_width_height
             x, y = self.xy_offset
             gl_color_constant = gl_color_dict.get(self.color_mode)
-    
+
+        
             name = bgl.Buffer(bgl.GL_INT, 1)
             bgl.glGenTextures(1, name)
             self.texture[n_id] = name[0]
             init_texture(width, height, name[0], texture, gl_color_constant)
 
-            multiplier, scale = self.get_preferences()
-            x, y = [x * multiplier, y * multiplier]
-            width, height = [width * scale, height * scale]
+            x, y, width, height = self.adjust_position_and_dimensions(x, y, width, height)
+            batch, shader = self.generate_batch_shader((x, y, width, height))
 
-            batch, shader = self.generate_batch_shader((x, y, width, height, cMode))
             draw_data = {
                 'tree_name': self.id_data.name[:],
                 'mode': 'custom_function',
@@ -416,28 +411,28 @@ class SvTextureViewerNode(bpy.types.Node, SverchCustomTreeNode):
             nvBGL2.callback_enable(n_id, draw_data)
 
     def generate_batch_shader(self, args):
-        x, y, w, h, cM = args
+        x, y, w, h = args
+        positions = ((x, y), (x + w, y), (x + w, y - h), (x, y - h))
+        indices = ((0, 1), (1, 1), (1, 0), (0, 0))
         shader = gpu.types.GPUShader(vertex_shader, fragment_shader)
-        batch = batch_for_shader(
-            shader, 'TRI_FAN',
-            {
-                "pos": ((x, y), (x + w, y), (x + w, y - h), (x, y - h)),
-                "texCoord": ((0, 1), (1, 1), (1, 0), (0, 0)),
-            },
-        )
+        batch = batch_for_shader(shader, 'TRI_FAN', {"pos": positions, "texCoord": indices})
         return batch, shader
 
     def get_preferences(self):
-        # adjust render location based on preference multiplier setting
-        try:
-            with sv_preferences() as prefs:
-                multiplier = prefs.render_location_xy_multiplier
-                scale = prefs.render_scale
-        except:
-            # print('did not find preferences - you need to save user preferences')
-            multiplier = 1.0
-            scale = 1.0
-        return multiplier, scale
+        # supplied with default, forces at least one value :)
+        props = get_params({
+            'render_scale': 1.0, 
+            'render_location_xy_multiplier': 1.0})
+        return props.render_scale, props.render_location_xy_multiplier
+
+    def adjust_position_and_dimensions(self, x, y, width, height):
+        """
+        this could also return scale for a blf notation in the vacinity of the texture
+        """
+        scale, multiplier = self.get_preferences()
+        x, y = [x * multiplier, y * multiplier]
+        width, height = [width * scale, height * scale]
+        return x, y, width, height
 
     def free(self):
         nvBGL2.callback_disable(node_id(self))
@@ -479,6 +474,18 @@ class SvTextureViewerNode(bpy.types.Node, SverchCustomTreeNode):
         desired_path = os.path.join(self.base_dir, self.image_name + extension)
         img.save_render(desired_path, scene)
         print('Bitmap saved!  path is:', desired_path)
+
+    def draw_label(self):
+        """ draw the node's header text"""
+
+        text = (self.label or self.name) + " "
+        if self.selected_mode == 'USER':
+            width, height = self.texture_width_height
+            text += f'{width} x {height}'
+        else:
+            text += str(size_tex_dict.get(self.selected_mode)) + "^2"
+        
+        return text
 
 
 classes = [SvTextureViewerOperator, SvTextureViewerDirSelect, SvTextureViewerNode]
