@@ -79,6 +79,29 @@ from sverchok.utils.sv_logging import sv_logger
 from sverchok.dependencies import numba  # not strictly needed i think...
 from sverchok.utils.decorators_compilation import njit
 
+def bounding_box_aligned(verts):
+    # based on &#34;3D Oriented bounding boxes&#34;: https://logicatcore.github.io/scratchpad/lidar/sensor-fusion/jupyter/2021/04/20/3D-Oriented-Bounding-Box.html
+    data = np.vstack(np.array(verts).transpose())
+    means = np.mean(data, axis=1)
+
+    cov = np.cov(data)
+    eval, evec = np.linalg.eig(cov)
+    centered_data = data - means[:,np.newaxis]
+    xmin, xmax, ymin, ymax, zmin, zmax = np.min(centered_data[0, :]), np.max(centered_data[0, :]), np.min(centered_data[1, :]), np.max(centered_data[1, :]), np.min(centered_data[2, :]), np.max(centered_data[2, :])
+    aligned_coords = np.matmul(evec.T, centered_data)
+    xmin, xmax, ymin, ymax, zmin, zmax = np.min(aligned_coords[0, :]), np.max(aligned_coords[0, :]), np.min(aligned_coords[1, :]), np.max(aligned_coords[1, :]), np.min(aligned_coords[2, :]), np.max(aligned_coords[2, :])
+
+    rectCoords = lambda x1, y1, z1, x2, y2, z2: np.array([[x1, x1, x2, x2, x1, x1, x2, x2],
+                                                        [y1, y2, y2, y1, y1, y2, y2, y1],
+                                                        [z1, z1, z1, z1, z2, z2, z2, z2]])
+
+    realigned_coords = np.matmul(evec, aligned_coords)
+    realigned_coords += means[:, np.newaxis]
+
+    rrc = np.matmul(evec, rectCoords(xmin, ymin, zmin, xmax, ymax, zmax))
+    rrc += means[:, np.newaxis]
+    rrc = rrc.transpose()
+    return tuple([rrc])
 
 identity_matrix = Matrix()
 
@@ -701,7 +724,7 @@ def diameter(vertices, axis):
     if axis is None:
         distances = [(mathutils.Vector(v1) - mathutils.Vector(v2)).length for v1 in vertices for v2 in vertices]
         return max(distances)
-    elif isinstance(axis, tuple) or isinstance(axis, Vector):
+    elif isinstance(axis, tuple) or isinstance(axis, Vector) or isinstance(axis, list):
         axis = mathutils.Vector(axis).normalized()
         ds = [mathutils.Vector(vertex).dot(axis) for vertex in vertices]
         M = max(ds)
@@ -2921,6 +2944,40 @@ returns mathutils.Matrix.</p></div>
     return r</code></pre>
 </details>
 </dd>
+<dt id="sverchok.utils.geom.bounding_box_aligned"><code class="name flex">
+<span>def <span class="ident">bounding_box_aligned</span></span>(<span>verts)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bounding_box_aligned(verts):
+    # based on &#34;3D Oriented bounding boxes&#34;: https://logicatcore.github.io/scratchpad/lidar/sensor-fusion/jupyter/2021/04/20/3D-Oriented-Bounding-Box.html
+    data = np.vstack(np.array(verts).transpose())
+    means = np.mean(data, axis=1)
+
+    cov = np.cov(data)
+    eval, evec = np.linalg.eig(cov)
+    centered_data = data - means[:,np.newaxis]
+    xmin, xmax, ymin, ymax, zmin, zmax = np.min(centered_data[0, :]), np.max(centered_data[0, :]), np.min(centered_data[1, :]), np.max(centered_data[1, :]), np.min(centered_data[2, :]), np.max(centered_data[2, :])
+    aligned_coords = np.matmul(evec.T, centered_data)
+    xmin, xmax, ymin, ymax, zmin, zmax = np.min(aligned_coords[0, :]), np.max(aligned_coords[0, :]), np.min(aligned_coords[1, :]), np.max(aligned_coords[1, :]), np.min(aligned_coords[2, :]), np.max(aligned_coords[2, :])
+
+    rectCoords = lambda x1, y1, z1, x2, y2, z2: np.array([[x1, x1, x2, x2, x1, x1, x2, x2],
+                                                        [y1, y2, y2, y1, y1, y2, y2, y1],
+                                                        [z1, z1, z1, z1, z2, z2, z2, z2]])
+
+    realigned_coords = np.matmul(evec, aligned_coords)
+    realigned_coords += means[:, np.newaxis]
+
+    rrc = np.matmul(evec, rectCoords(xmin, ymin, zmin, xmax, ymax, zmax))
+    rrc += means[:, np.newaxis]
+    rrc = rrc.transpose()
+    return tuple([rrc])</code></pre>
+</details>
+</dd>
 <dt id="sverchok.utils.geom.bounding_sphere"><code class="name flex">
 <span>def <span class="ident">bounding_sphere</span></span>(<span>vertices, algorithm='TRIVIAL')</span>
 </code></dt>
@@ -3328,7 +3385,7 @@ returns float.</p></div>
     if axis is None:
         distances = [(mathutils.Vector(v1) - mathutils.Vector(v2)).length for v1 in vertices for v2 in vertices]
         return max(distances)
-    elif isinstance(axis, tuple) or isinstance(axis, Vector):
+    elif isinstance(axis, tuple) or isinstance(axis, Vector) or isinstance(axis, list):
         axis = mathutils.Vector(axis).normalized()
         ds = [mathutils.Vector(vertex).dot(axis) for vertex in vertices]
         M = max(ds)
@@ -9337,6 +9394,7 @@ returns: an instance of Ellipse3D.</p></div>
 <li><code><a title="sverchok.utils.geom.autorotate_householder" href="#sverchok.utils.geom.autorotate_householder">autorotate_householder</a></code></li>
 <li><code><a title="sverchok.utils.geom.autorotate_track" href="#sverchok.utils.geom.autorotate_track">autorotate_track</a></code></li>
 <li><code><a title="sverchok.utils.geom.bounding_box" href="#sverchok.utils.geom.bounding_box">bounding_box</a></code></li>
+<li><code><a title="sverchok.utils.geom.bounding_box_aligned" href="#sverchok.utils.geom.bounding_box_aligned">bounding_box_aligned</a></code></li>
 <li><code><a title="sverchok.utils.geom.bounding_sphere" href="#sverchok.utils.geom.bounding_sphere">bounding_sphere</a></code></li>
 <li><code><a title="sverchok.utils.geom.calc_bounds" href="#sverchok.utils.geom.calc_bounds">calc_bounds</a></code></li>
 <li><code><a title="sverchok.utils.geom.calc_normal" href="#sverchok.utils.geom.calc_normal">calc_normal</a></code></li>
