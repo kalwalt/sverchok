@@ -1607,11 +1607,11 @@ self.wrapper_tracked_ui_draw_op(row, "node.view3d_align_from", icon='CURSOR', te
 </ul>
 <h3>Class variables</h3>
 <dl>
-<dt id="sverchok.node_tree.SvNodeTreeCommon.show_time_mode"><code class="name">var <span class="ident">show_time_mode</span> : <_PropertyDeferred, <built-in function EnumProperty>, {'items': [('Per node', 'Per node', ''), ('Cumulative', 'Cumulative', '')], 'options': set(), 'update': <function <a title="sverchok.node_tree.SvNodeTreeCommon" href="#sverchok.node_tree.SvNodeTreeCommon">SvNodeTreeCommon</a>.<lambda> at 0x7f2466f1d280>, 'description': 'Mode of showing node update timings', 'attr': 'show_time_mode'}></code></dt>
+<dt id="sverchok.node_tree.SvNodeTreeCommon.show_time_mode"><code class="name">var <span class="ident">show_time_mode</span> : <_PropertyDeferred, <built-in function EnumProperty>, {'items': [('Per node', 'Per node', ''), ('Cumulative', 'Cumulative', '')], 'options': set(), 'update': <function <a title="sverchok.node_tree.SvNodeTreeCommon" href="#sverchok.node_tree.SvNodeTreeCommon">SvNodeTreeCommon</a>.<lambda> at 0x7fd935dfcaf0>, 'description': 'Mode of showing node update timings', 'attr': 'show_time_mode'}></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="sverchok.node_tree.SvNodeTreeCommon.sv_show_time_nodes"><code class="name">var <span class="ident">sv_show_time_nodes</span> : <_PropertyDeferred, <built-in function BoolProperty>, {'name': 'Node times', 'default': False, 'options': set(), 'update': <function <a title="sverchok.node_tree.SvNodeTreeCommon" href="#sverchok.node_tree.SvNodeTreeCommon">SvNodeTreeCommon</a>.<lambda> at 0x7f2466f1d1f0>, 'attr': 'sv_show_time_nodes'}></code></dt>
+<dt id="sverchok.node_tree.SvNodeTreeCommon.sv_show_time_nodes"><code class="name">var <span class="ident">sv_show_time_nodes</span> : <_PropertyDeferred, <built-in function BoolProperty>, {'name': 'Node times', 'default': False, 'options': set(), 'update': <function <a title="sverchok.node_tree.SvNodeTreeCommon" href="#sverchok.node_tree.SvNodeTreeCommon">SvNodeTreeCommon</a>.<lambda> at 0x7fd935dfca60>, 'attr': 'sv_show_time_nodes'}></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -1895,11 +1895,11 @@ even if the tree is not in the Live update mode</p></div>
 effect not all nodes but only those which have property
 <code><a title="sverchok.node_tree.UpdateNodes.is_animatable" href="#sverchok.node_tree.UpdateNodes.is_animatable">UpdateNodes.is_animatable</a></code> enabled.</p></div>
 </dd>
-<dt id="sverchok.node_tree.SverchCustomTree.sv_draft"><code class="name">var <span class="ident">sv_draft</span> : <_PropertyDeferred, <built-in function BoolProperty>, {'name': 'Draft', 'description': 'Draft (simplified processing) mode', 'default': False, 'update': <function <a title="sverchok.node_tree.SverchCustomTree.on_draft_mode_changed" href="#sverchok.node_tree.SverchCustomTree.on_draft_mode_changed">SverchCustomTree.on_draft_mode_changed()</a> at 0x7f2466f1d670>, 'options': set(), 'attr': 'sv_draft'}></code></dt>
+<dt id="sverchok.node_tree.SverchCustomTree.sv_draft"><code class="name">var <span class="ident">sv_draft</span> : <_PropertyDeferred, <built-in function BoolProperty>, {'name': 'Draft', 'description': 'Draft (simplified processing) mode', 'default': False, 'update': <function <a title="sverchok.node_tree.SverchCustomTree.on_draft_mode_changed" href="#sverchok.node_tree.SverchCustomTree.on_draft_mode_changed">SverchCustomTree.on_draft_mode_changed()</a> at 0x7fd935dfcee0>, 'options': set(), 'attr': 'sv_draft'}></code></dt>
 <dd>
 <div class="desc"><p>Draft mode replaces selected properties of certain nodes with smaller values to lighten cpu load.</p></div>
 </dd>
-<dt id="sverchok.node_tree.SverchCustomTree.sv_process"><code class="name">var <span class="ident">sv_process</span> : <_PropertyDeferred, <built-in function BoolProperty>, {'name': 'Process', 'default': True, 'description': 'Update upon tree and node property changes', 'update': <function <a title="sverchok.node_tree.SverchCustomTree" href="#sverchok.node_tree.SverchCustomTree">SverchCustomTree</a>.<lambda> at 0x7f2466f1d700>, 'options': set(), 'attr': 'sv_process'}></code></dt>
+<dt id="sverchok.node_tree.SverchCustomTree.sv_process"><code class="name">var <span class="ident">sv_process</span> : <_PropertyDeferred, <built-in function BoolProperty>, {'name': 'Process', 'default': True, 'description': 'Update upon tree and node property changes', 'update': <function <a title="sverchok.node_tree.SverchCustomTree" href="#sverchok.node_tree.SverchCustomTree">SverchCustomTree</a>.<lambda> at 0x7fd935dfcf70>, 'options': set(), 'attr': 'sv_process'}></code></dt>
 <dd>
 <div class="desc"><p>If enabled it means that the tree will be evaluated upon changes in its
 topology, changes in node properties or scene changes made by user.
@@ -1920,7 +1920,7 @@ reevaluated upon changes in the scene. It will effect only nodes with
 <li>etc.</li>
 </ul></div>
 </dd>
-<dt id="sverchok.node_tree.SverchCustomTree.sv_show"><code class="name">var <span class="ident">sv_show</span> : <_PropertyDeferred, <built-in function BoolProperty>, {'name': 'Show', 'default': True, 'description': 'Show this layout', 'update': <function <a title="sverchok.node_tree.SverchCustomTree.turn_off_ng" href="#sverchok.node_tree.SverchCustomTree.turn_off_ng">SverchCustomTree.turn_off_ng()</a> at 0x7f2466f1d5e0>, 'options': set(), 'attr': 'sv_show'}></code></dt>
+<dt id="sverchok.node_tree.SverchCustomTree.sv_show"><code class="name">var <span class="ident">sv_show</span> : <_PropertyDeferred, <built-in function BoolProperty>, {'name': 'Show', 'default': True, 'description': 'Show this layout', 'update': <function <a title="sverchok.node_tree.SverchCustomTree.turn_off_ng" href="#sverchok.node_tree.SverchCustomTree.turn_off_ng">SverchCustomTree.turn_off_ng()</a> at 0x7fd935dfce50>, 'options': set(), 'attr': 'sv_show'}></code></dt>
 <dd>
 <div class="desc"><p>See `SverchCustomTree.turn_off_ng</p></div>
 </dd>
@@ -2328,6 +2328,7 @@ until new release.</p>
 <li>sverchok.nodes.CAD.merge_mesh_2d.SvMergeMesh2D</li>
 <li>sverchok.nodes.CAD.merge_mesh_2d_lite.SvMergeMesh2DLite</li>
 <li>sverchok.nodes.analyzer.area.SvAreaNode</li>
+<li>sverchok.nodes.analyzer.bbox_aligned.SvAlignedBBoxNode</li>
 <li>sverchok.nodes.analyzer.bbox_mk3.SvBBoxNodeMk3</li>
 <li>sverchok.nodes.analyzer.bvh_overlap_polys.SvBvhOverlapNodeNew</li>
 <li>sverchok.nodes.analyzer.chess_selection.SvChessSelection</li>
@@ -2366,6 +2367,7 @@ until new release.</p>
 <li>sverchok.nodes.analyzer.steiner_ellipse.SvSteinerEllipseNode</li>
 <li>sverchok.nodes.analyzer.volume.SvVolumeNodeMK2</li>
 <li>sverchok.nodes.analyzer.wave_paint.SvWavePainterNode</li>
+<li>sverchok.nodes.analyzer.weighted_vector_sum.SvWeightedVectorSumNode</li>
 <li>sverchok.nodes.color.color_in_mk1.SvColorsInNodeMK1</li>
 <li>sverchok.nodes.color.color_input.SvColorInputNode</li>
 <li>sverchok.nodes.color.color_mix.SvColorMixNode</li>
@@ -2401,7 +2403,7 @@ until new release.</p>
 <li>sverchok.nodes.curve.curve_segment.SvCurveSegmentNode</li>
 <li>sverchok.nodes.curve.deconstruct_curve.SvDeconstructCurveNode</li>
 <li>sverchok.nodes.curve.elevate_degree.SvCurveElevateDegreeNode</li>
-<li>sverchok.nodes.curve.ellipse.SvEllipseCurveNode</li>
+<li>sverchok.nodes.curve.ellipse_curve.SvEllipseCurveNodeMK2</li>
 <li>sverchok.nodes.curve.endpoints.SvCurveEndpointsNode</li>
 <li>sverchok.nodes.curve.eval_curve.SvEvalCurveNode</li>
 <li>sverchok.nodes.curve.extend_curve.SvExtendCurveNode</li>
@@ -2467,7 +2469,7 @@ until new release.</p>
 <li>sverchok.nodes.field.curve_bend_field.SvBendAlongCurveFieldNode</li>
 <li>sverchok.nodes.field.decompose_vector_field.SvDecomposeVectorFieldNode</li>
 <li>sverchok.nodes.field.differential_operations.SvFieldDiffOpsNode</li>
-<li>sverchok.nodes.field.field_bend_along_surface.SvBendAlongSurfaceFieldNode</li>
+<li>sverchok.nodes.field.field_bend_along_surface_mk2.SvBendAlongSurfaceFieldMk2Node</li>
 <li>sverchok.nodes.field.image_field.SvImageFieldNode</li>
 <li>sverchok.nodes.field.merge_scalar_fields.SvMergeScalarFieldsNode</li>
 <li>sverchok.nodes.field.mesh_normal_field.SvExMeshNormalFieldNode</li>
@@ -2687,7 +2689,7 @@ until new release.</p>
 <li>sverchok.nodes.object_nodes.material_index.SvMaterialIndexNode</li>
 <li>sverchok.nodes.object_nodes.named_attribute.SvNamedMeshAttributeNode</li>
 <li>sverchok.nodes.object_nodes.object_raycast2.SvOBJRayCastNodeMK2</li>
-<li>sverchok.nodes.object_nodes.points_from_uv_to_mesh.SvUVPointonMeshNode</li>
+<li>sverchok.nodes.object_nodes.points_from_uv_to_mesh.SvUVPointonMeshNodeMK2</li>
 <li>sverchok.nodes.object_nodes.sample_uv_color.SvSampleUVColorNode</li>
 <li>sverchok.nodes.object_nodes.scene_raycast2.SvSCNRayCastNodeMK2</li>
 <li>sverchok.nodes.object_nodes.sculpt_mask.SvSculptMaskNode</li>
@@ -2727,7 +2729,7 @@ until new release.</p>
 <li>sverchok.nodes.scene.collection_picker_mk1.SvCollectionPicker</li>
 <li>sverchok.nodes.scene.curve_in.SvCurveInputNode</li>
 <li>sverchok.nodes.scene.frame_info_mk2.SvFrameInfoNodeMK2</li>
-<li>sverchok.nodes.scene.get_objects_data.SvGetObjectsData</li>
+<li>sverchok.nodes.scene.get_objects_data.SvGetObjectsDataMK2</li>
 <li>sverchok.nodes.scene.node_remote_mk2.SvNodeRemoteNodeMK2</li>
 <li>sverchok.nodes.scene.obj_remote_mk2.SvObjRemoteNodeMK2</li>
 <li>sverchok.nodes.scene.objects_in_lite.SvObjInLite</li>
@@ -2792,9 +2794,9 @@ until new release.</p>
 <li>sverchok.nodes.solid.wire_face.SvSolidWireFaceNode</li>
 <li>sverchok.nodes.spatial.concave_hull.SvConcaveHullNode</li>
 <li>sverchok.nodes.spatial.convex_hull_mk2.SvConvexHullNodeMK2</li>
-<li>sverchok.nodes.spatial.delaunay3d.SvDelaunay3dMk2Node</li>
 <li>sverchok.nodes.spatial.delaunay_2d.DelaunayTriangulation2DNode</li>
 <li>sverchok.nodes.spatial.delaunay_2d_cdt.SvDelaunay2DCdt</li>
+<li>sverchok.nodes.spatial.delaunay_3d_mk2.SvDelaunay3dMk2Node</li>
 <li>sverchok.nodes.spatial.field_random_probe.SvFieldRandomProbeMk3Node</li>
 <li>sverchok.nodes.spatial.homogenous_vector_field.SvHomogenousVectorField</li>
 <li>sverchok.nodes.spatial.lloyd2d.SvLloyd2dNode</li>
@@ -2803,13 +2805,14 @@ until new release.</p>
 <li>sverchok.nodes.spatial.lloyd_on_sphere.SvLloydOnSphereNode</li>
 <li>sverchok.nodes.spatial.lloyd_solid.SvLloydSolidNode</li>
 <li>sverchok.nodes.spatial.lloyd_solid_face.SvLloydSolidFaceNode</li>
+<li>sverchok.nodes.spatial.mesh_clustering.SvMeshClusteringNode</li>
 <li>sverchok.nodes.spatial.populate_solid.SvPopulateSolidMk2Node</li>
 <li>sverchok.nodes.spatial.populate_surface.SvPopulateSurfaceMk2Node</li>
 <li>sverchok.nodes.spatial.random_points_on_mesh.SvRandomPointsOnMesh</li>
 <li>sverchok.nodes.spatial.voronoi3d.SvExVoronoi3DNode</li>
 <li>sverchok.nodes.spatial.voronoi_2d.Voronoi2DNode</li>
-<li>sverchok.nodes.spatial.voronoi_on_mesh.SvVoronoiOnMeshNode</li>
-<li>sverchok.nodes.spatial.voronoi_on_solid.SvVoronoiOnSolidNode</li>
+<li>sverchok.nodes.spatial.voronoi_on_mesh_mk2.SvVoronoiOnMeshNodeMK3</li>
+<li>sverchok.nodes.spatial.voronoi_on_solid_mk2.SvVoronoiOnSolidNodeMK2</li>
 <li>sverchok.nodes.spatial.voronoi_on_surface.SvVoronoiOnSurfaceNode</li>
 <li>sverchok.nodes.spatial.voronoi_sphere.SvExVoronoiSphereNode</li>
 <li>sverchok.nodes.surface.adaptive_tessellate.SvAdaptiveTessellateNode</li>
@@ -2842,7 +2845,7 @@ until new release.</p>
 <li>sverchok.nodes.surface.plane.SvPlaneSurfaceNode</li>
 <li>sverchok.nodes.surface.quads_to_nurbs.SvExQuadsToNurbsNode</li>
 <li>sverchok.nodes.surface.raycast.SvExRaycastSurfaceNode</li>
-<li>sverchok.nodes.surface.revolution_surface.SvRevolutionSurfaceNode</li>
+<li>sverchok.nodes.surface.revolution_surface.SvRevolutionSurfaceNodeMK2</li>
 <li>sverchok.nodes.surface.ruled_surface.SvCurveLerpNode</li>
 <li>sverchok.nodes.surface.subdomain.SvSurfaceSubdomainNode</li>
 <li>sverchok.nodes.surface.surface_bevel_curve.SvBendCurveSurfaceNode</li>
@@ -2946,8 +2949,7 @@ until new release.</p>
 <li>sverchok.nodes.viz.viewer_texture_lite.SvTextureViewerNodeLite</li>
 <li>sverchok.nodes.viz.viewer_typography.SvTypeViewerNodeV28</li>
 <li>sverchok.nodes.viz.viewer_waveform_output.SvWaveformViewer</li>
-<li>sverchok.old_nodes.getsetprop.SvGetPropNode</li>
-<li>sverchok.old_nodes.getsetprop.SvSetPropNode</li>
+<li>sverchok.old_nodes.getprop.SvGetPropNode</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
@@ -3624,7 +3626,7 @@ This UI is displayed on a property panel of the tree editor.</p></div>
 </ul>
 <h3>Class variables</h3>
 <dl>
-<dt id="sverchok.node_tree.UpdateNodes.is_animatable"><code class="name">var <span class="ident">is_animatable</span> : <_PropertyDeferred, <built-in function BoolProperty>, {'name': 'Animate Node', 'description': 'Update Node on frame change', 'default': True, 'update': <function <a title="sverchok.node_tree.UpdateNodes" href="#sverchok.node_tree.UpdateNodes">UpdateNodes</a>.<lambda> at 0x7f2466f1dc10>, 'attr': 'is_animatable'}></code></dt>
+<dt id="sverchok.node_tree.UpdateNodes.is_animatable"><code class="name">var <span class="ident">is_animatable</span> : <_PropertyDeferred, <built-in function BoolProperty>, {'name': 'Animate Node', 'description': 'Update Node on frame change', 'default': True, 'update': <function <a title="sverchok.node_tree.UpdateNodes" href="#sverchok.node_tree.UpdateNodes">UpdateNodes</a>.<lambda> at 0x7fd9359954c0>, 'attr': 'is_animatable'}></code></dt>
 <dd>
 <div class="desc"><p>A switch for user to make a node to update on frame changes in a scene.
 Use <code><a title="sverchok.node_tree.UpdateNodes.is_animation_dependent" href="#sverchok.node_tree.UpdateNodes.is_animation_dependent">UpdateNodes.is_animation_dependent</a></code> to display the option in node UI.</p></div>
@@ -3635,7 +3637,7 @@ Use <code><a title="sverchok.node_tree.UpdateNodes.is_animation_dependent" href=
 Also the node should use <code><a title="sverchok.node_tree.SverchCustomTreeNode.sv_draw_buttons" href="#sverchok.node_tree.SverchCustomTreeNode.sv_draw_buttons">SverchCustomTreeNode.sv_draw_buttons()</a></code>.</p>
 <p><img alt="image" src="https://user-images.githubusercontent.com/28003269/193507101-60a28c3f-50a1-4117-a66f-25b0b4e07e13.png"></p></div>
 </dd>
-<dt id="sverchok.node_tree.UpdateNodes.is_interactive"><code class="name">var <span class="ident">is_interactive</span> : <_PropertyDeferred, <built-in function BoolProperty>, {'default': True, 'description': 'Update node upon changes in the scene', 'update': <function <a title="sverchok.node_tree.UpdateNodes.update_interactive_mode" href="#sverchok.node_tree.UpdateNodes.update_interactive_mode">UpdateNodes.update_interactive_mode()</a> at 0x7f2466f1daf0>, 'name': 'Interactive', 'attr': 'is_interactive'}></code></dt>
+<dt id="sverchok.node_tree.UpdateNodes.is_interactive"><code class="name">var <span class="ident">is_interactive</span> : <_PropertyDeferred, <built-in function BoolProperty>, {'default': True, 'description': 'Update node upon changes in the scene', 'update': <function <a title="sverchok.node_tree.UpdateNodes.update_interactive_mode" href="#sverchok.node_tree.UpdateNodes.update_interactive_mode">UpdateNodes.update_interactive_mode()</a> at 0x7fd9359953a0>, 'name': 'Interactive', 'attr': 'is_interactive'}></code></dt>
 <dd>
 <div class="desc"><p>When this option is on arbitrary changes in scene will update this node.
 Those changes can be:
@@ -3665,7 +3667,7 @@ should be used instead.</p>
 <pre><code class="language-text">⚠️ There is no sense to override this property
 </code></pre></div>
 </dd>
-<dt id="sverchok.node_tree.UpdateNodes.refresh"><code class="name">var <span class="ident">refresh</span> : <_PropertyDeferred, <built-in function BoolProperty>, {'name': 'Update Node', 'description': 'Update Node', 'update': <function <a title="sverchok.node_tree.UpdateNodes.refresh_node" href="#sverchok.node_tree.UpdateNodes.refresh_node">UpdateNodes.refresh_node()</a> at 0x7f2466f1db80>, 'attr': 'refresh'}></code></dt>
+<dt id="sverchok.node_tree.UpdateNodes.refresh"><code class="name">var <span class="ident">refresh</span> : <_PropertyDeferred, <built-in function BoolProperty>, {'name': 'Update Node', 'description': 'Update Node', 'update': <function <a title="sverchok.node_tree.UpdateNodes.refresh_node" href="#sverchok.node_tree.UpdateNodes.refresh_node">UpdateNodes.refresh_node()</a> at 0x7fd935995430>, 'attr': 'refresh'}></code></dt>
 <dd>
 <div class="desc"><p>See <code><a title="sverchok.node_tree.UpdateNodes.refresh_node" href="#sverchok.node_tree.UpdateNodes.refresh_node">UpdateNodes.refresh_node()</a></code>.</p>
 <p><img alt="image" src="https://user-images.githubusercontent.com/28003269/193505561-395ca65c-3354-4e23-b5f7-765b2d830e4b.png"></p>
